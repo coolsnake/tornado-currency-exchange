@@ -26,6 +26,7 @@
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/scripts.js"></script>
 </head>
 <body>
     <div class="container">
@@ -53,26 +54,27 @@
                         </label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control"
-                                   value="" id="buy_price"
+                                   value="{{ current_bitcoin_rate }}" id="buy_price"
                                    placeholder="{{ current_bitcoin_rate }}">
                         </div>
                             <div class="col-sm-2">
                                 <p class="form-control-static"> $</p>
                             </div>
                         </div>
-                        <div class="form-group" hidden>
+                        <div class="form-group" id="buy_total" hidden>
                             <div class="col-sm-5 control-label">Всего: </div>
                             <div class="col-sm-5">
                                 <p class="form-control-static">
-                                    <span class="text-info" id="buy_result"></span> $
+                                    <span class="text-info" id="buy_total_text"></span> $
                                 </p>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <button type="button" id="buy_button"
+                            <button type="button" id="btn-buy"
                                     class="btn btn-success pull-right"
                                     disabled="">Купить</button>
-                            <button type="button" class="btn btn-default ">Посчитать</button>
+                            <button type="button" class="btn btn-default"
+                                    id="btn-count-buy">Посчитать</button>
                         </div>
                     </div>
               </div>
@@ -94,7 +96,7 @@
                     </div>
                 <div class="form-group">
                     <label for="sell_price" class="col-sm-5 control-label">
-                           Цена за ед.&nbsp;:
+                           Цена за ед. :
                     </label>
                     <div class="col-sm-5">
                         <input type="text" class="form-control"
@@ -105,19 +107,20 @@
                             <p class="form-control-static"> $</p>
                         </div>
                     </div>
-                    <div class="form-group" hidden>
+                    <div class="form-group" id="sell_total" hidden>
                         <div class="col-sm-5 control-label">Всего: </div>
                         <div class="col-sm-5">
                             <p class="form-control-static">
-                                <span class="text-info" id="sell_result"></span> $
+                                <span class="text-info" id="sell_total_text"></span> $
                             </p>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <button type="button" id="sell_button"
+                        <button type="button" id="btn-sell"
                                 class="btn btn-success pull-right"
                                 disabled="">Купить</button>
-                        <button type="button" class="btn btn-default ">Посчитать</button>
+                        <button type="button" class="btn btn-default"
+                                id="btn-count-sell">Посчитать</button>
                     </div>
                 </div>
             </div>
