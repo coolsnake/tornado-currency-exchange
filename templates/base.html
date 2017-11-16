@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,25 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style>
-        div.border_radius {
-            box-sizing: border-box;
-            border: solid black 1px;
-            border-color: #ddd;
-            border-radius: 4px;
-            background: white;
-            min-height: 4em;
-            margin-top: 10px;
-        }
-
-        td.col-green {
-            color: green;
-        }
-
-        td.col-red {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="static/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/scripts.js"></script>
@@ -31,165 +14,6 @@
 <body>
     <div class="container">
         {% block body %}{% end %}
-        <div class="row">
-              <div class="col-sm-6 border_radius">
-                    <h4 class="sub-header text-info text-center">Купить BTC</h4>
-
-                    <form id="buy_form" class="form-horizontal" action="" method="post">
-                        <div class="form-group">
-                            <label for="buy_count" class="col-sm-5 control-label">
-                                Кол-во :
-                            </label>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="buy_count"
-                                       name="count" placeholder="0">
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="form-control-static"> BTC</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="buy_price" class="col-sm-5 control-label">
-                                   Цена за ед.&nbsp;:
-                            </label>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" name="price"
-                                       value="{{ current_bitcoin_rate }}" id="buy_price"
-                                       placeholder="{{ current_bitcoin_rate }}">
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="form-control-static"> $</p>
-                            </div>
-                        </div>
-                        <div class="form-group" id="buy_total" hidden>
-                            <div class="col-sm-5 control-label">Всего: </div>
-                            <div class="col-sm-5">
-                                <p class="form-control-static">
-                                    <span class="text-info" id="buy_total_text"></span> $
-                                </p>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <button type="submit" id="btn-buy"
-                                    class="btn btn-success pull-right"
-                                    disabled="" name="buy">Купить</button>
-                            <button type="button" class="btn btn-default"
-                                    id="btn-count-buy">Посчитать</button>
-                        </div>
-                    </form>
-              </div>
-            <div class="col-sm-6 border_radius">
-                <h4 class="sub-header text-info text-center">Продать BTC</h4>
-
-                <form id="sell_form" class="form-horizontal" action="" method="post">
-                    <div class="form-group">
-                        <label for="sell_count" class="col-sm-5 control-label ">
-                            Кол-во:
-                        </label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" id="sell_count"
-                                   name="count" placeholder="0">
-                        </div>
-                        <div class="col-sm-2">
-                            <p class="form-control-static"> BTC</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="sell_price" class="col-sm-5 control-label">
-                               Цена за ед. :
-                        </label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control"
-                                   value="" id="sell_price" name="price"
-                                   placeholder="{{ current_bitcoin_rate }}">
-                        </div>
-                        <div class="col-sm-2">
-                            <p class="form-control-static"> $</p>
-                        </div>
-                    </div>
-                    <div class="form-group" id="sell_total" hidden>
-                        <div class="col-sm-5 control-label">Всего: </div>
-                        <div class="col-sm-5">
-                            <p class="form-control-static">
-                                <span class="text-info" id="sell_total_text"></span> $
-                            </p>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <button type="submit" id="btn-sell"
-                                class="btn btn-success pull-right"
-                                disabled="" name="sell">Купить</button>
-                        <button type="button" class="btn btn-default"
-                                id="btn-count-sell">Посчитать</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12  border_radius">
-                <h5 class="sub-header text-info text-center">Биржевой стакан</h5>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                                <tr>
-                                <th class="text-center">Покупка</th>
-                                <th class="text-center">Цена</th>
-                                <th class="text-center">Продажа</th>
-                                </tr>
-                        </thead>
-                        <tbody id="trade_book" class="text-center">
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>6211.01</td>
-                                <td>20</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>6201.01</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12  border_radius">
-                <h5 class="sub-header text-info text-center">История сделок</h5>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                                <tr>
-                                <th>Дата</th>
-                                <th>Пользователь</th>
-                                <th>Тип</th>
-                                <th>Цена</th>
-                                <th>$</th>
-                                <th>BTC</th>
-                                </tr>
-                        </thead>
-                        <tbody id="trade_deals">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td class="col-green"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td class="col-red"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 </html>

@@ -1,0 +1,17 @@
+div.border_radius {
+    box-sizing: border-box;
+    border: solid black 1px;
+    border-color: #ddd;
+    border-radius: 4px;
+    background: white;
+    min-height: 4em;
+    margin-top: 10px;
+}
+
+td.col-green {
+    color: green;
+}
+
+td.col-red {
+    color: red;
+}
