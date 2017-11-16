@@ -15,9 +15,9 @@
                 <tbody id="trade_book" class="text-center">
                     {% for order in orders %}
                         <tr>
-                            <td>{% if order.order_type == "buy" %}{{ order.count }}{% end %}</td>
-                            <td>{{ order.price_per_item }}</td>
-                            <td>{% if order.order_type == "sell" %}{{ order.count }}{% end %}</td>
+                            <td>{% if order.get("order_type") == "buy" %}{{ order.get("count") }}{% end %}</td>
+                            <td>{{ order["price_per_item"] }}</td>
+                            <td>{% if order.get("order_type") == "sell" %}{{ order.get("count") }}{% end %}</td>
                         </tr>
                     {% end %}
                 </tbody>
