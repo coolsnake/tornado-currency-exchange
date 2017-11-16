@@ -35,7 +35,7 @@
               <div class="col-sm-6 border_radius">
                     <h4 class="sub-header text-info text-center">Купить BTC</h4>
 
-                    <div id="buy_form" class="form-horizontal">
+                    <form id="buy_form" class="form-horizontal" action="" method="post">
                         <div class="form-group">
                             <label for="buy_count" class="col-sm-5 control-label">
                                 Кол-во :
@@ -48,15 +48,15 @@
                                 <p class="form-control-static"> BTC</p>
                             </div>
                         </div>
-                    <div class="form-group">
-                        <label for="buy_price" class="col-sm-5 control-label">
-                               Цена за ед.&nbsp;:
-                        </label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control"
-                                   value="{{ current_bitcoin_rate }}" id="buy_price"
-                                   placeholder="{{ current_bitcoin_rate }}">
-                        </div>
+                        <div class="form-group">
+                            <label for="buy_price" class="col-sm-5 control-label">
+                                   Цена за ед.&nbsp;:
+                            </label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control"
+                                       value="{{ current_bitcoin_rate }}" id="buy_price"
+                                       placeholder="{{ current_bitcoin_rate }}">
+                            </div>
                             <div class="col-sm-2">
                                 <p class="form-control-static"> $</p>
                             </div>
@@ -70,18 +70,18 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <button type="button" id="btn-buy"
+                            <button type="submit" id="btn-buy"
                                     class="btn btn-success pull-right"
                                     disabled="">Купить</button>
                             <button type="button" class="btn btn-default"
                                     id="btn-count-buy">Посчитать</button>
                         </div>
-                    </div>
+                    </form>
               </div>
             <div class="col-sm-6 border_radius">
                 <h4 class="sub-header text-info text-center">Продать BTC</h4>
 
-                <div id="sell_form" class="form-horizontal">
+                <form id="sell_form" class="form-horizontal" action="" method="post">
                     <div class="form-group">
                         <label for="sell_count" class="col-sm-5 control-label ">
                             Кол-во:
@@ -94,15 +94,15 @@
                             <p class="form-control-static"> BTC</p>
                         </div>
                     </div>
-                <div class="form-group">
-                    <label for="sell_price" class="col-sm-5 control-label">
-                           Цена за ед. :
-                    </label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control"
-                               value="" id="sell_price"
-                               placeholder="{{ current_bitcoin_rate }}">
-                    </div>
+                    <div class="form-group">
+                        <label for="sell_price" class="col-sm-5 control-label">
+                               Цена за ед. :
+                        </label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control"
+                                   value="" id="sell_price"
+                                   placeholder="{{ current_bitcoin_rate }}">
+                        </div>
                         <div class="col-sm-2">
                             <p class="form-control-static"> $</p>
                         </div>
@@ -116,13 +116,13 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <button type="button" id="btn-sell"
+                        <button type="submit" id="btn-sell"
                                 class="btn btn-success pull-right"
                                 disabled="">Купить</button>
                         <button type="button" class="btn btn-default"
                                 id="btn-count-sell">Посчитать</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <div class="row">
