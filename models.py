@@ -1,5 +1,6 @@
 from datetime import datetime
 import uuid
+import json
 
 
 class OrderBook:
@@ -10,9 +11,12 @@ class OrderBook:
         self.order_type = order_type
 
         self.total_price = price_per_item * count
-        self.date_time = datetime.now()
+        self.date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.id = uuid.uuid4().hex
 
     def __repr__(self):
         fields = vars(self)
         return str(fields)
+
+    def update_total_price(self):
+        self.total_price = self.price_per_item * self.count
