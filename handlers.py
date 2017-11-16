@@ -13,14 +13,20 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
     async def get(self):
-        http_client = httpclient.AsyncHTTPClient()
         rate = await tornado.gen.Task(self.db.get, 'rate')
         if rate:
             self.render("base.html", current_bitcoin_rate=rate)
         else:
-            r = await http_client.fetch("https://api.coindesk.com/v1/bpi/currentprice/USD.json")
-            decoded = json_decode(r.body)
-            rate = decoded['bpi']['USD']['rate_float']
+            http_client = httpclient.AsyncHTTPClient()
+            try:
+                api_response = await http_client.fetch("https://api.coindesk.com/v1/bpi/currentprice/USD.json")
+                decoded = json_decode(api_response.body)
+                rate = decoded['bpi']['USD']['rate_float']
+            except httpclient.HTTPError as e:
+                print("Error: " + str(e))
+            except Exception as e:
+                print("Error: " + str(e))
+            http_client.close()
             if not rate:
                 raise tornado.web.HTTPError(404)
             await tornado.gen.Task(self.db.set, 'rate', rate, 60)
