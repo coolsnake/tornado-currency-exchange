@@ -4,7 +4,7 @@ import json
 
 from models import OrderBook
 
-from utils import get_rate, find_order, deal
+from utils import get_orders, get_rate, find_order, deal
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -17,12 +17,7 @@ class BaseHandler(tornado.web.RequestHandler):
 class MainHandler(BaseHandler):
     async def get(self):
         rate = await get_rate(self.db)
-
-        orders = await tornado.gen.Task(self.db.get, 'orders')
-        if not orders:
-            orders = list()
-        else:
-            orders = json.loads(orders)
+        orders = await get_orders(self.db)
 
         self.render("order_form.html", current_bitcoin_rate=rate, orders=orders)
 
@@ -30,18 +25,17 @@ class MainHandler(BaseHandler):
         order_type = 'buy' if 'buy' in self.request.arguments else 'sell'
         price = float(self.get_argument('price', .0))
         count = float(self.get_argument('count', .0))
-        current_order = OrderBook(status=1, price_per_item=price, count=count, order_type=order_type)
+        current_order = OrderBook(status=1, price_per_item=price, count=count,
+                                  order_type=order_type)
 
         rate = await get_rate(self.db)
+        orders = await get_orders(self.db)
 
-        orders = await tornado.gen.Task(self.db.get, 'orders')
-        if not orders:
-            orders = list()
-        else:
-            orders = json.loads(orders)
         orders.append(current_order.__dict__)
-        await tornado.gen.Task(self.db.set, 'orders', json.dumps(orders))
+
+
 
         #find_order(current_order)
+        await tornado.gen.Task(self.db.set, 'orders', json.dumps(orders))
 
         self.render("order_form.html", current_bitcoin_rate=rate, orders=orders)
