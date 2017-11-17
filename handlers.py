@@ -33,7 +33,8 @@ class MainHandler(BaseHandler):
 
         orders.append(current_order.__dict__)
 
-
+        orders.sort(key=lambda x: x['order_type'], reverse=True)
+        orders.sort(key=lambda x: x['price_per_item'], reverse=True)
 
         #find_order(current_order)
         await tornado.gen.Task(self.db.set, 'orders', json.dumps(orders))
