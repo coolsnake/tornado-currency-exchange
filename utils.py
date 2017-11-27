@@ -35,8 +35,13 @@ async def get_rate(db):
     return rate
 
 
-async def find_order():
+async def find_order(order):
     pass
+    # order_type = order['order_type']
+    # if order_type == 'buy':
+    #     pass
+    # elif order_type == 'sell':
+    #     pass
     # искать подходящие заказы с другим типом рекурсивно
     # если заказ с типом продажа:
     #   идем по всем заказам на покупку от самого дорогого
