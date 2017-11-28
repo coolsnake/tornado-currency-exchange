@@ -12,6 +12,7 @@ from handlers import MainHandler
 
 
 define('port', default=8888, type=int, help="Run on the given port")
+define('address', default='0.0.0.0', type=str, help="Run on the given host")
 
 
 class Application(tornado.web.Application):
@@ -30,5 +31,5 @@ class Application(tornado.web.Application):
 if __name__ == "__main__":
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(options.port, address='0.0.0.0')
+    http_server.listen(options.port, address=options.address)
     tornado.ioloop.IOLoop.current().start()
