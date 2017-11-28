@@ -4,8 +4,6 @@ import tornado.gen
 from tornado.escape import json_decode
 from tornado import httpclient
 
-from models import OrderBook
-
 
 async def get_orders(db, type=None):
     orders = await tornado.gen.Task(db.get, type)
@@ -38,40 +36,55 @@ async def get_rate(db):
 async def build_order_book(order_type, current_order, db):
     buy_orders = await get_orders(db, type='buy')
     sell_orders = await get_orders(db, type='sell')
+    deals = await get_orders(db, type='deal')
+    if not deals:
+        deals = list()
     if order_type == 'buy':
-        buy_orders.append(current_order.__dict__)
+        if bool(sell_orders):
+            deal_candidate = min(sell_orders, key=lambda x: x['price_per_item'])
+            if deal_candidate.get('price_per_item', 0) <= current_order.price_per_item:
+                deal_result = await deal(buy=current_order.__dict__, sell=deal_candidate)
+                for deal_item in deal_result:
+                    deals.append(deal_item)
+                await build_order_book(order_type, current_order, db)
+            else:
+                buy_orders.append(current_order.__dict__)
+        else:
+            buy_orders.append(current_order.__dict__)
+
     elif order_type == 'sell':
-        sell_orders.append(current_order.__dict__)
-    # искать подходящие заказы с другим типом рекурсивно
-    # если заказ с типом покупка:
-    #   идем по всем продажам от самой дешевой
-    #   если самая дешевая не подходит, КОНЕЦ
-    #   иначе deal() и find_order()
-    # если заказ с типом продажа:
-    #   идем по всем заказам на покупку от самого дорогого
-    #   если самый дорогой не подходит, КОНЕЦ
-    #   иначе deal() и find_order()
+        if bool(buy_orders):
+            deal_candidate = max(buy_orders, key=lambda x: x['price_per_item'])
+            if deal_candidate.get('price_per_item', 0) >= current_order.price_per_item:
+                deal_result = await deal(buy=current_order.__dict__, sell=deal_candidate)
+                for deal_item in deal_result:
+                    deals.append(deal_item)
+                await build_order_book(order_type, current_order, db)
+            else:
+                sell_orders.append(current_order.__dict__)
+        else:
+            sell_orders.append(current_order.__dict__)
+
     buy_orders.sort(key=lambda x: x['price_per_item'], reverse=True)
     sell_orders.sort(key=lambda x: x['price_per_item'], reverse=True)
     await tornado.gen.Task(db.set, 'buy', json.dumps(buy_orders))
     await tornado.gen.Task(db.set, 'sell', json.dumps(sell_orders))
+    await tornado.gen.Task(db.set, 'deal', json.dumps(deals))
 
 
 async def deal(buy, sell):
-    if buy['count'] == sell['count']:
-        buy['status'] = 2  # change status Order -> Deal
-        sell['status'] = 2
-    elif buy['count'] > sell['count']:
-        sell['status'] = 2  # change status Order -> Deal
-        # create deal copy
-        OrderBook(status=2, price_per_item=sell['price_per_item'],
-                  count=sell['count'], order_type='buy')
-        buy['count'] -= sell['count']  # calculate the remainder
-        buy.update_total_price()
-    elif buy['count'] < sell['count']:
-        buy['status'] = 2
-        OrderBook(status=2, price_per_item=buy['price_per_item'],
-                  count=buy['count'], order_type='sell')
-        sell['count'] -= buy['count']
-        buy.update_total_price()
-    await buy, sell,
+    deals = list()
+    if buy.get('count', 0) == sell.get('count', 0):
+        deal_sell = sell
+        deals.append(deal_sell)
+        buy['count'] -= sell.get('count', 0)
+        sell['count'] -= buy.get('count', 0)
+    elif buy.get('count', 0) > sell.get('count', 0):
+        deals.append(sell)
+        buy['count'] -= sell.get('count', 0)  # calculate the remainder
+        buy['total_price'] = buy.get('price_per_item', 0) * buy.get('count', 0)
+    elif buy.get('count', 0) < sell.get('count', 0):
+        deals.append(buy)
+        sell['count'] -= buy.get('count', 0)
+        sell['total_price'] = sell.get('price_per_item', 0) * sell.get('count', 0)
+    return deals

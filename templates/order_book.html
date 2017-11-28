@@ -104,18 +104,22 @@
         </thead>
         <tbody id="trade_book" class="text-center">
             {% for order in sell_orders %}
+            {% if order.get("status") %}
                 <tr>
                     <td></td>
-                    <td>{{ order["price_per_item"] }}</td>
+                    <td>{{ order.get("price_per_item") }}</td>
                     <td>{{ order.get("count") }}</td>
                 </tr>
             {% end %}
+            {% end %}
             {% for order in buy_orders %}
+            {% if order.get("status") %}
                 <tr>
                     <td>{{ order.get("count") }}</td>
-                    <td>{{ order["price_per_item"] }}</td>
+                    <td>{{ order.get("price_per_item") }}</td>
                     <td></td>
                 </tr>
+            {% end %}
             {% end %}
         </tbody>
     </table>
@@ -128,30 +132,20 @@
         <thead>
                 <tr>
                 <th>Дата</th>
-                <th>Пользователь</th>
-                <th>Тип</th>
                 <th>Цена</th>
                 <th>$</th>
                 <th>BTC</th>
                 </tr>
         </thead>
         <tbody id="trade_deals">
+        {% for deal in deals %}
             <tr>
-                <td></td>
-                <td></td>
-                <td class="col-green"></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ deal.get("date_time") }}</td>
+                <td>{{ deal.get("price_per_item") }}</td>
+                <td>{{ deal.get("total_price") }}</td>
+                <td>{{ deal.get("count") }}</td>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="col-red"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        {% end %}
         </tbody>
     </table>
 </div>

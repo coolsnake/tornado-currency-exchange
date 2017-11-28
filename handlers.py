@@ -19,19 +19,20 @@ class MainHandler(BaseHandler):
         rate = await get_rate(self.db)
         sell_orders = await get_orders(self.db, type='sell')
         buy_orders = await get_orders(self.db, type='buy')
-
+        deals = await get_orders(self.db, type='deal')
         self.render("order_book.html", current_bitcoin_rate=rate, sell_orders=sell_orders,
-                    buy_orders=buy_orders)
+                    buy_orders=buy_orders, deals=deals)
 
     async def post(self, *args, **kwargs):
         price = float(self.get_argument('price', .0))
         count = float(self.get_argument('count', .0))
-        current_order = OrderBook(status=1, price_per_item=price, count=count)
+        current_order = OrderBook(price_per_item=price, count=count)
 
         order_type = 'buy' if 'buy' in self.request.arguments else 'sell'  # костыль self.get_argument
         await build_order_book(order_type, current_order, self.db)
         rate = await get_rate(self.db)
         sell_orders = await get_orders(self.db, type='sell')
         buy_orders = await get_orders(self.db, type='buy')
+        deals = await get_orders(self.db, type='deal')
         self.render("order_book.html", current_bitcoin_rate=rate, sell_orders=sell_orders,
-                    buy_orders=buy_orders)
+                    buy_orders=buy_orders, deals=deals)
