@@ -7,8 +7,8 @@ from tornado import httpclient
 from models import OrderBook
 
 
-async def get_orders(db):
-    orders = await tornado.gen.Task(db.get, 'orders')
+async def get_orders(db, type=None):
+    orders = await tornado.gen.Task(db.get, type)
     if not orders:
         orders = list()
     else:
@@ -35,22 +35,26 @@ async def get_rate(db):
     return rate
 
 
-async def find_order(order):
-    pass
-    # order_type = order['order_type']
-    # if order_type == 'buy':
-    #     pass
-    # elif order_type == 'sell':
-    #     pass
+async def build_order_book(order_type, current_order, db):
+    buy_orders = await get_orders(db, type='buy')
+    sell_orders = await get_orders(db, type='sell')
+    if order_type == 'buy':
+        buy_orders.append(current_order.__dict__)
+    elif order_type == 'sell':
+        sell_orders.append(current_order.__dict__)
     # искать подходящие заказы с другим типом рекурсивно
-    # если заказ с типом продажа:
-    #   идем по всем заказам на покупку от самого дорогого
-    #   если самый дорогой не подходит, КОНЕЦ
-    #   иначе deal() и find_order()
     # если заказ с типом покупка:
     #   идем по всем продажам от самой дешевой
     #   если самая дешевая не подходит, КОНЕЦ
     #   иначе deal() и find_order()
+    # если заказ с типом продажа:
+    #   идем по всем заказам на покупку от самого дорогого
+    #   если самый дорогой не подходит, КОНЕЦ
+    #   иначе deal() и find_order()
+    buy_orders.sort(key=lambda x: x['price_per_item'], reverse=True)
+    sell_orders.sort(key=lambda x: x['price_per_item'], reverse=True)
+    await tornado.gen.Task(db.set, 'buy', json.dumps(buy_orders))
+    await tornado.gen.Task(db.set, 'sell', json.dumps(sell_orders))
 
 
 async def deal(buy, sell):

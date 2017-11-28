@@ -1,14 +1,12 @@
 from datetime import datetime
 import uuid
-import json
 
 
 class OrderBook:
-    def __init__(self, status=1, price_per_item=.0, count=.0, order_type='sell'):
+    def __init__(self, status=1, price_per_item=.0, count=.0):
         self.status = status  # 0 - delete, 1 - order, 2 - deal
         self.price_per_item = price_per_item
         self.count = count
-        self.order_type = order_type
 
         self.total_price = price_per_item * count
         self.date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
