@@ -46,7 +46,6 @@ async def build_order_book(order_type, current_order, db):
                 deal_result = await deal(buy=current_order.__dict__, sell=deal_candidate)
                 for deal_item in deal_result:
                     deals.append(deal_item)
-                await build_order_book(order_type, current_order, db)
             else:
                 buy_orders.append(current_order.__dict__)
         else:
@@ -59,7 +58,6 @@ async def build_order_book(order_type, current_order, db):
                 deal_result = await deal(buy=current_order.__dict__, sell=deal_candidate)
                 for deal_item in deal_result:
                     deals.append(deal_item)
-                await build_order_book(order_type, current_order, db)
             else:
                 sell_orders.append(current_order.__dict__)
         else:
